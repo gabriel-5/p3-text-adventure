@@ -1,0 +1,16 @@
+{
+  "name": "oop-27-09-21",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.13",
+    "test": "^0.6.0"
+  },
+  "devDependencies": {},
+  "description": ""
+}
