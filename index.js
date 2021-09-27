@@ -49,12 +49,16 @@ class Room {
 
     take(takeItem) {
         if (takeItem in this._linkedItems) {
-            console.log(`You take the item`);
-            return this._linkedItems[takeItem];
+            console.log(`You take the ${takeItem}`);
+            document.querySelector("#information").innerHTML = `You take the ${takeItem}. Item information: ${this._linkedItems[takeItem].description}`;
+            return this._linkedItems[takeItem].description;
         } else {
-            console.log(`this is not working`);
+            console.log(`There isn't a ${takeItem} here.`);
+            document.querySelector("#information").innerHTML = `There isn't a ${takeItem} here.`;
         }
     }
+
+    // THIS. IS REFERRING TO THE OBJECTS THAT ARE CONSTRUCTED!!! REMEMBER THIS
 
     move(direction) {
         if (direction in this._linkedRooms) {
@@ -170,7 +174,8 @@ class Enemy extends Character {
     }
 }
 
-const Silas = new Character("Silas", "A small brozne statue of a dog, smashed into many small pieces.", "You need to write something on the paper, I think. The last person who arrived here kept getting sent away.")
+const Silas = new Character("Silas", "A small bronze statue of a dog, glued back together.", "Thank you for putting me back together. I've been like that for years. Ever since the last person arrived here.")
+
 
 const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'PLEASE PUT ME BACK TOGETHER'. On the dining table, there is a small bottle of glue. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
 const Foundry = new Room("foundry", "The must be where all the heat was coming from. In what looks like a foundry of some sort, there are eight men all all melting down what looks like bronze in a home-made crucible. No matter what you try, they do not acknowledge you. The door to the south leads back to the kitchen");
@@ -186,8 +191,8 @@ Kitchen.linkRoom("south", WorshippingArea);
 Kitchen.linkRoom("east", Graveyard);
 Kitchen.linkRoom("west", ProcessingPlant);
 
-Kitchen.linkItem("takeGlue", Glue);
-Kitchen.linkItem("takeNote", Note);
+Kitchen.linkItem("glue", Glue);
+Kitchen.linkItem("note", Note);
 
 Foundry.linkRoom("south", Kitchen);
 
@@ -208,7 +213,7 @@ window.onload = () => {
             command = document.getElementById("command").value;
             //direction commands
             const directions = ["north", "south", "east", "west"]
-            const actions = ["takeGlue", "takeNote"];
+
 
             if (directions.includes(command)) {
                 currentRoom = currentRoom.move(command);
