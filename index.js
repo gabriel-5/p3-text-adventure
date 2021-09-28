@@ -48,6 +48,7 @@ class Room {
     }
 
     take(takeItem) {
+<<<<<<< HEAD
         if (backpack.includes(takeItem)) {
             document.querySelector("#information").innerHTML = `You already have the ${takeItem}.`;
         } else if (takeItem in this._linkedItems) {
@@ -57,6 +58,12 @@ class Room {
             this._linkedItems[takeItem] = null;
             return itemToTake;
 
+=======
+        if (takeItem in this._linkedItems) {
+            console.log(`You take the ${takeItem}`);
+            document.querySelector("#information").innerHTML = `You take the ${takeItem}. ${this._linkedItems[takeItem].description}`;
+            return this._linkedItems[takeItem].description;
+>>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
         } else {
             console.log(`There isn't a ${takeItem} here.`);
             document.querySelector("#information").innerHTML = `There isn't a ${takeItem} here.`;
@@ -64,8 +71,11 @@ class Room {
     }
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
     move(direction) {
         if (direction in this._linkedRooms) {
             playAudio(stepsSound);
@@ -120,6 +130,13 @@ class Item {
         this._name = name;
         this._description = description;
         this._isHeld = isHeld;
+    }
+}
+
+class HeldItem extends Item {
+    constructor(name, description, isHeld) {
+        super(name, description);
+        this.isHeld = isHeld
     }
 }
 
@@ -192,6 +209,10 @@ class Enemy extends Character {
 }
 
 const Silas = new Character("Silas", "A small bronze statue of a dog, glued back together.", "Thank you for putting me back together. I've been like that for years. Ever since the last person arrived here.")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
 
 
 const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'Welcome to Skid Hollow. Please do not remove this note'. On the dining table, there is a small bottle of glue. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
@@ -200,8 +221,13 @@ const ProcessingPlant = new Room("processing plant", "You are in a room full of 
 const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods. To the west is the door back into the kitchen")
 const WorshippingArea = new Room("worshipping area", "The room is nearly completely empty aside from a concrete alter in the far end of the room. On top of the alter there are the remains of a  bronze statue of a dog smashed into pieces. The door to the north leads back to the kitchen")
 
+<<<<<<< HEAD
 const Note = new Item("Note", "It is a red piece of paper which reads 'Welcome to Skid Hollow. Please do not remove this note'");
 const Glue = new Item("Glue", "It is a tube of strong glue", false);
+=======
+const Note = new Item("Note", "It is a red piece of paper which reads 'PLEASE PUT ME BACK TOGETHER'");
+const Glue = new Item("Glue", "It is a tube of strong glue");
+>>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
 
 
 Kitchen.linkRoom("north", Foundry);
@@ -234,8 +260,11 @@ window.onload = () => {
             const directions = ["north", "south", "east", "west"]
             const actions = ["note", "glue"]
 
+<<<<<<< HEAD
             if (directions.includes(command) && currentRoom == Graveyard && backpack.includes(" Note ")) {
                 playAudio(badEndSound);
+=======
+>>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
 
                 document.getElementById("game").innerHTML = "As you try to leave the graveyard, you begin to hear a harsh ringing in your ears. The ringing feels both internal and external, growing louder and more painful. You feel yourself being dragged away. You lose consciousness."
                 document.getElementById("img-container").appendChild(badEnd);
@@ -248,11 +277,17 @@ window.onload = () => {
             } else if (directions.includes(command)) {
                 currentRoom = currentRoom.move(command);
                 document.getElementById("game").innerHTML = currentRoom.describe();
+<<<<<<< HEAD
 
             } else if (actions.includes(command)) {
                 let item = currentRoom.take(command);
                 backpack.push(" " + item.name + " ");
                 inventoryText();
+=======
+                document.querySelector("#information").innerHTML = ""
+            } else if (actions.includes(command)) {
+                currentRoom.take(command);
+>>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
             } else {
                 alert("invalid command");
             }
