@@ -16,13 +16,16 @@ body{
     text-align: center;
 }
 
-<<<<<<< HEAD
 #game{
     padding-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 #information{
     color: blueviolet;
+     padding-left: 20px;
+    padding-right: 20px;
 }
 
 #inventory-title{
@@ -50,8 +53,4 @@ img{
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-duration: 5s;
-=======
-#information{
-    color: blueviolet;
->>>>>>> 57e27f435b3fa8ad774cc208bf8a1c01a8f0b97d
 }
