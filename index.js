@@ -250,6 +250,8 @@ window.onload = () => {
                 document.getElementById("inventory-title").style.display = "none";
                 document.getElementById("inventory").style.display = "none";
                 document.getElementById("information").style.display = "none";
+                document.getElementById("ending-text").innerHTML = "(Bad Ending)"
+
 
             } else if (command == "dog" && currentRoom == WorshippingArea && backpack.includes(" Glue ")) {
                 document.getElementById("game").innerHTML = "You use the tube of glue to stick the small bronze dog back together. It screams in pain, with the voice of an adult man. The dog stares you down, and says: 'Thank you so much for putting me back together. I've been like that since the last one got sent here. It's going to be okay. I'll send you home.'";
@@ -258,6 +260,7 @@ window.onload = () => {
                 document.getElementById("inventory-title").style.display = "none";
                 document.getElementById("inventory").style.display = "none";
                 document.getElementById("information").style.display = "none";
+                document.getElementById("ending-text").innerHTML = "(Good Ending)"
 
             } else if (directions.includes(command)) {
                 currentRoom = currentRoom.move(command);
@@ -339,7 +342,7 @@ function changeMap() {
         document.getElementById("pre3").style.display = "block";
         document.getElementById("pre4").style.display = "none";
         document.getElementById("pre5").style.display = "none";
-        
+
     } else if (currentRoom == Graveyard) {
         document.getElementById("map1").style.display = "none";
         document.getElementById("map2").style.display = "none";
