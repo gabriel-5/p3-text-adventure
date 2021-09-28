@@ -5,20 +5,51 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Adventure Game</title>
+    <title>SKID HOLLOW</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <div>
-        <p id="game"></p>
+    <div class="row">
+        <div class="col-sm-4"></div>
 
-        <p id="dialogue"></p>
+        <div class="col-sm-4">
+            <p id="game"></p>
+            <div id="img-container"></div>
+        </div>
+        <div class="col-sm-1">
+            <p id="inventory-title">Inventory:</p>
+            <p id="inventory"></p>
+
+        </div>
+        <div class="col-sm-3">
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <p id="information"></p>
+        </div>
+        <div class="col-sm-4"></div>
+
     </div>
     <div id="container">
         <input type=" text" name="command" id="command">
     </div>
+
+    <audio id="steps">
+        <source src="audio/steps.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="badEnd">
+        <source src="audio/badEnd.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CREATE INVENTORY SYSTEM ON RIGHT SIDE OF SCREEN THAT UPDATES WITH WHATS IN THE ARRAY/OBJECT -->
 
     <script src="index.js"> </script>
 </body>

@@ -48,19 +48,32 @@ class Room {
     }
 
     take(takeItem) {
-        if (takeItem in this._linkedItems) {
-            console.log(`You take the item`);
-            return this._linkedItems[takeItem];
+        if (backpack.includes(takeItem)) {
+            document.querySelector("#information").innerHTML = `You already have the ${takeItem}.`;
+        } else if (takeItem in this._linkedItems) {
+            console.log(`You take the ${takeItem}`);
+            document.querySelector("#information").innerHTML = `You take the ${takeItem}. ${this._linkedItems[takeItem].description}`;
+            let itemToTake = this._linkedItems[takeItem];
+            this._linkedItems[takeItem] = null;
+            return itemToTake;
+
         } else {
-            console.log(`this is not working`);
+            console.log(`There isn't a ${takeItem} here.`);
+            document.querySelector("#information").innerHTML = `There isn't a ${takeItem} here.`;
         }
     }
 
+
+
+
     move(direction) {
         if (direction in this._linkedRooms) {
+            playAudio(stepsSound);
+            document.querySelector("#information").innerHTML = ""
             return this._linkedRooms[direction];
+
         } else {
-            alert("You can't go that way")
+            document.querySelector("#information").innerHTML = "You can't go in that direction"
             return this;
         }
     }
@@ -81,6 +94,10 @@ class Item {
         return this._description;
     }
 
+    get isHeld() {
+        return this._isHeld;
+    }
+
     set name(value) {
         if (value === "") {
             console.log("Error, name too short");
@@ -95,12 +112,16 @@ class Item {
         this._description = value;
     }
 
-    constructor(name, description) {
+    set isHeld(value) {
+        this._isHeld = value;
+    }
+
+    constructor(name, description, isHeld) {
         this._name = name;
         this._description = description;
+        this._isHeld = isHeld;
     }
 }
-
 
 
 class Character {
@@ -170,24 +191,26 @@ class Enemy extends Character {
     }
 }
 
-const Silas = new Character("Silas", "A small brozne statue of a dog, smashed into many small pieces.", "You need to write something on the paper, I think. The last person who arrived here kept getting sent away.")
+const Silas = new Character("Silas", "A small bronze statue of a dog, glued back together.", "Thank you for putting me back together. I've been like that for years. Ever since the last person arrived here.")
 
-const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'PLEASE PUT ME BACK TOGETHER'. On the dining table, there is a small bottle of glue. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
+
+const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'Welcome to Skid Hollow. Please do not remove this note'. On the dining table, there is a small bottle of glue. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
 const Foundry = new Room("foundry", "The must be where all the heat was coming from. In what looks like a foundry of some sort, there are eight men all all melting down what looks like bronze in a home-made crucible. No matter what you try, they do not acknowledge you. The door to the south leads back to the kitchen");
 const ProcessingPlant = new Room("processing plant", "You are in a room full of big tanks processing unidentifiable thick liquids. The place smells like a combination of shoe polish and strong cider. Some of the tanks have small cracks and the liquid is seeping out at a glacial pace. The leaking liquid looks like tree sap mixed with gram flour. The tunnel to the east leads back to the kitchen")
-const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods")
+const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods. To the west is the door back into the kitchen")
 const WorshippingArea = new Room("worshipping area", "The room is nearly completely empty aside from a concrete alter in the far end of the room. On top of the alter there are the remains of a  bronze statue of a dog smashed into pieces. The door to the north leads back to the kitchen")
 
-const Note = new Item("Note", "A note which reads 'PLEASE PUT ME BACK TOGETHER'");
-const Glue = new Item("Glue", "A tube of strong glue");
+const Note = new Item("Note", "It is a red piece of paper which reads 'Welcome to Skid Hollow. Please do not remove this note'");
+const Glue = new Item("Glue", "It is a tube of strong glue", false);
+
 
 Kitchen.linkRoom("north", Foundry);
 Kitchen.linkRoom("south", WorshippingArea);
 Kitchen.linkRoom("east", Graveyard);
 Kitchen.linkRoom("west", ProcessingPlant);
 
-Kitchen.linkItem("takeGlue", Glue);
-Kitchen.linkItem("takeNote", Note);
+Kitchen.linkItem("glue", Glue);
+Kitchen.linkItem("note", Note);
 
 Foundry.linkRoom("south", Kitchen);
 
@@ -197,24 +220,39 @@ Graveyard.linkRoom("west", Kitchen);
 
 WorshippingArea.linkRoom("north", Kitchen);
 
-
 let currentRoom = Kitchen;
+
+let backpack = [];
 
 window.onload = () => {
     document.getElementById("game").innerHTML = currentRoom.describe();
 
     document.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
-            command = document.getElementById("command").value;
+            command = document.getElementById("command").value.toLowerCase();
             //direction commands
             const directions = ["north", "south", "east", "west"]
-            const actions = ["takeGlue", "takeNote"];
+            const actions = ["note", "glue"]
 
-            if (directions.includes(command)) {
+            if (directions.includes(command) && currentRoom == Graveyard && backpack.includes(" Note ")) {
+                playAudio(badEndSound);
+
+                document.getElementById("game").innerHTML = "As you try to leave the graveyard, you begin to hear a harsh ringing in your ears. The ringing feels both internal and external, growing louder and more painful. You feel yourself being dragged away. You lose consciousness."
+                document.getElementById("img-container").appendChild(badEnd);
+                document.getElementById("command").style.display = "none";
+                document.getElementById("inventory-title").style.display = "none";
+                document.getElementById("inventory").style.display = "none";
+
+            } else if (command == "dog" && currentRoom == WorshippingArea && backpack.includes(" Glue ")) {
+                console.log("this is working");
+            } else if (directions.includes(command)) {
                 currentRoom = currentRoom.move(command);
                 document.getElementById("game").innerHTML = currentRoom.describe();
-            } else if (actions.includes(command) && currentRoom.linkedItems.name) {
-                console.log("test");
+
+            } else if (actions.includes(command)) {
+                let item = currentRoom.take(command);
+                backpack.push(" " + item.name + " ");
+                inventoryText();
             } else {
                 alert("invalid command");
             }
@@ -223,5 +261,25 @@ window.onload = () => {
     })
 
 }
+
+function playAudio(audio) {
+    audio.play();
+}
+
+function inventoryText() {
+    document.getElementById("inventory").innerHTML = ""
+    for (i = 0; i < backpack.length; i++)
+        document.getElementById("inventory").innerHTML += backpack[i];
+}
+
+let badEnd = document.createElement("img");
+
+badEnd.classList.add("imageSpin");
+
+badEnd.src = "images/gravestone.png";
+
+let badEndSound = document.querySelector("#badEnd");
+let stepsSound = document.querySelector("#steps");
+
 
 // use linkedrooms to add items to rooms/inventory
