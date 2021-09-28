@@ -226,6 +226,7 @@ window.onload = () => {
             if (directions.includes(command)) {
                 currentRoom = currentRoom.move(command);
                 document.getElementById("game").innerHTML = currentRoom.describe();
+                document.querySelector("#information").innerHTML = ""
             } else if (actions.includes(command)) {
                 currentRoom.take(command);
             } else {
