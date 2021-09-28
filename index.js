@@ -50,7 +50,7 @@ class Room {
     take(takeItem) {
         if (takeItem in this._linkedItems) {
             console.log(`You take the ${takeItem}`);
-            document.querySelector("#information").innerHTML = `You take the ${takeItem}. Item information: ${this._linkedItems[takeItem].description}`;
+            document.querySelector("#information").innerHTML = `You take the ${takeItem}. ${this._linkedItems[takeItem].description}`;
             return this._linkedItems[takeItem].description;
         } else {
             console.log(`There isn't a ${takeItem} here.`);
@@ -58,7 +58,6 @@ class Room {
         }
     }
 
-    // THIS. IS REFERRING TO THE OBJECTS THAT ARE CONSTRUCTED!!! REMEMBER THIS
 
     move(direction) {
         if (direction in this._linkedRooms) {
@@ -102,6 +101,13 @@ class Item {
     constructor(name, description) {
         this._name = name;
         this._description = description;
+    }
+}
+
+class HeldItem extends Item {
+    constructor(name, description, isHeld) {
+        super(name, description);
+        this.isHeld = isHeld
     }
 }
 
@@ -183,8 +189,9 @@ const ProcessingPlant = new Room("processing plant", "You are in a room full of 
 const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods")
 const WorshippingArea = new Room("worshipping area", "The room is nearly completely empty aside from a concrete alter in the far end of the room. On top of the alter there are the remains of a  bronze statue of a dog smashed into pieces. The door to the north leads back to the kitchen")
 
-const Note = new Item("Note", "A note which reads 'PLEASE PUT ME BACK TOGETHER'");
-const Glue = new Item("Glue", "A tube of strong glue");
+const Note = new Item("Note", "It is a red piece of paper which reads 'PLEASE PUT ME BACK TOGETHER'");
+const Glue = new Item("Glue", "It is a tube of strong glue");
+
 
 Kitchen.linkRoom("north", Foundry);
 Kitchen.linkRoom("south", WorshippingArea);
@@ -210,16 +217,17 @@ window.onload = () => {
 
     document.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
-            command = document.getElementById("command").value;
+            command = document.getElementById("command").value.toLowerCase();
             //direction commands
             const directions = ["north", "south", "east", "west"]
+            const actions = ["note", "glue"]
 
 
             if (directions.includes(command)) {
                 currentRoom = currentRoom.move(command);
                 document.getElementById("game").innerHTML = currentRoom.describe();
-            } else if (actions.includes(command) && currentRoom.linkedItems.name) {
-                console.log("test");
+            } else if (actions.includes(command)) {
+                currentRoom.take(command);
             } else {
                 alert("invalid command");
             }
