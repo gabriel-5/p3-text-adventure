@@ -249,6 +249,14 @@ window.onload = () => {
                 document.getElementById("inventory").style.display = "none";
                 document.getElementById("information").style.display = "none";
                 document.getElementById("ending-text").innerHTML = "(Bad Ending)"
+                document.getElementById("map-end").style.display = "block";
+                document.getElementById("map4").style.display = "none";
+                document.getElementById("pre1").style.display = "none";
+                document.getElementById("pre2").style.display = "none";
+                document.getElementById("pre3").style.display = "none";
+                document.getElementById("pre4").style.display = "none";
+                document.getElementById("pre5").style.display = "none";
+
 
 
             } else if (command == "dog" && currentRoom == WorshippingArea && backpack.includes(" Glue ")) {
@@ -311,6 +319,7 @@ function changeMap() {
         document.getElementById("map4").style.display = "none";
         document.getElementById("map5").style.display = "none";
 
+
         document.getElementById("pre1").style.display = "block";
         document.getElementById("pre2").style.display = "none";
         document.getElementById("pre3").style.display = "none";
@@ -323,6 +332,7 @@ function changeMap() {
         document.getElementById("map4").style.display = "none";
         document.getElementById("map5").style.display = "none";
 
+
         document.getElementById("pre1").style.display = "none";
         document.getElementById("pre2").style.display = "block";
         document.getElementById("pre3").style.display = "none";
@@ -334,6 +344,7 @@ function changeMap() {
         document.getElementById("map3").style.display = "block";
         document.getElementById("map4").style.display = "none";
         document.getElementById("map5").style.display = "none";
+
 
         document.getElementById("pre1").style.display = "none";
         document.getElementById("pre2").style.display = "none";
@@ -348,6 +359,7 @@ function changeMap() {
         document.getElementById("map4").style.display = "block";
         document.getElementById("map5").style.display = "none";
 
+
         document.getElementById("pre1").style.display = "none";
         document.getElementById("pre2").style.display = "none";
         document.getElementById("pre3").style.display = "none";
@@ -360,10 +372,12 @@ function changeMap() {
         document.getElementById("map4").style.display = "none";
         document.getElementById("map5").style.display = "block";
 
+
         document.getElementById("pre1").style.display = "none";
         document.getElementById("pre2").style.display = "none";
         document.getElementById("pre3").style.display = "none";
         document.getElementById("pre4").style.display = "none";
         document.getElementById("pre5").style.display = "block";
+
     }
 }
