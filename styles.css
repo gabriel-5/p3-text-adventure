@@ -5,7 +5,6 @@ body{
     font-size: 1.3em;
 }
 
-
 @keyframes spin {
     from{
     transform: rotateY(0deg);
@@ -25,8 +24,6 @@ body{
     padding-top: 50px;
 }
 
-
-
 #game{
     padding-top: 50px;
     padding-left: 20px;
@@ -43,12 +40,12 @@ body{
     color: rgb(189, 128, 247);
     color: rgb(189, 128, 247);
     padding-top: 50px;
+
 }
 #inventory{
     color: rgb(189, 128, 247);
     color: rgb(189, 128, 247);
-    padding-right: 20px;
-    
+    padding-right: 20px;  
 }
 
 #img-container{
