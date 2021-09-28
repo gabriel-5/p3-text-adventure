@@ -64,8 +64,6 @@ class Room {
     }
 
 
-
-
     move(direction) {
         if (direction in this._linkedRooms) {
             playAudio(stepsSound);
@@ -201,9 +199,9 @@ class Enemy extends Character {
 const Silas = new Character("Silas", "A small bronze statue of a dog, glued back together.", "Thank you for putting me back together. I've been like that for years. Ever since the last person arrived here.")
 
 
-const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'Welcome to Skidded Hollow. Please do not remove this note'. On the dining table, there is a small bottle of glue. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
+const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'Welcome to Skidded Hollow. Please do not remove this note'. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
 const Foundry = new Room("foundry", "The must be where all the heat was coming from. In what looks like a foundry of some sort, there are eight men all all melting down what looks like bronze in a home-made crucible. No matter what you try, they do not acknowledge you. The door to the south leads back to the kitchen");
-const ProcessingPlant = new Room("processing plant", "You are in a room full of big tanks processing unidentifiable thick liquids. The place smells like a combination of shoe polish and strong cider. Some of the tanks have small cracks and the liquid is seeping out at a glacial pace. The leaking liquid looks like tree sap mixed with gram flour. The tunnel to the east leads back to the kitchen")
+const ProcessingPlant = new Room("processing plant", "You are in a room full of big tanks processing unidentifiable thick liquids. The place smells like a combination of shoe polish and strong cider. Some of the tanks have small cracks and the liquid is seeping out at a glacial pace. The leaking liquid looks like tree sap. On the floor there a is half-full tube of glue; it looks like someone has unsuccessfully tried to fix the cracks in the tubes using it. The tunnel to the east leads back to the kitchen")
 const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods. To the west is the door back into the kitchen")
 const WorshippingArea = new Room("worshipping area", "The room is nearly completely empty aside from a concrete alter in the far end of the room. On top of the alter there are the remains of a  bronze statue of a dog smashed into pieces. The door to the north leads back to the kitchen")
 
@@ -216,7 +214,7 @@ Kitchen.linkRoom("south", WorshippingArea);
 Kitchen.linkRoom("east", Graveyard);
 Kitchen.linkRoom("west", ProcessingPlant);
 
-Kitchen.linkItem("glue", Glue);
+ProcessingPlant.linkItem("glue", Glue);
 Kitchen.linkItem("note", Note);
 
 Foundry.linkRoom("south", Kitchen);
