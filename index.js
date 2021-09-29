@@ -130,12 +130,6 @@ class Item {
     }
 }
 
-class HeldItem extends Item {
-    constructor(name, description, isHeld) {
-        super(name, description);
-        this.isHeld = isHeld
-    }
-}
 
 
 class Character {
@@ -175,7 +169,7 @@ class Character {
     }
 
     talk() {
-        return `${this._name} appears and says: "${this._conversaion}""`;
+        return `${this._name} appears and says: "${this._conversaion}"`;
     }
 
     constructor(name, description, conversation) {
