@@ -188,6 +188,11 @@ const ProcessingPlant = new Room("processing plant", "You are in a room full of 
 const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods. To the west is the door back into the kitchen")
 const WorshippingArea = new Room("worshipping area", "The room is nearly completely empty aside from a concrete alter in the far end of the room. On top of the alter there are the remains of a  bronze statue of a dog smashed into pieces. The door to the north leads back to the kitchen")
 
+const Basement = new Room("basement", "You are in a dark basement beneath the graveyard. There is a door to the south, and a door to the north");
+const Hallway = new Room("hallway", "You are in a very long hallway. It is very dark and you can't see the other side, but you can hear a quiet drone comining from the far end.")
+
+
+
 const Note = new Item("Note", "It is a red piece of paper which reads 'Welcome to Skid Tiller. Please do not remove this note'");
 const Glue = new Item("Glue", "It is a tube of strong glue");
 const Gloves = new Item("Gloves", "They are a pair of gloves that enhance your physical strength")
@@ -197,6 +202,14 @@ Kitchen.linkRoom("north", Foundry);
 Kitchen.linkRoom("south", WorshippingArea);
 Kitchen.linkRoom("east", Graveyard);
 Kitchen.linkRoom("west", ProcessingPlant);
+Graveyard.linkRoom("west", Kitchen);
+Foundry.linkRoom("south", Kitchen);
+ProcessingPlant.linkRoom("east", Kitchen);
+WorshippingArea.linkRoom("north", Kitchen);
+Basement.linkRoom("south", Hallway);
+Basement.linkRoom("north", Hallway);
+Hallway.linkRoom("south", Basement);
+Hallway.linkRoom("north", Basement);
 
 ProcessingPlant.linkItem("glue", Glue);
 Kitchen.linkItem("note", Note);
@@ -204,13 +217,9 @@ Foundry.linkItem("gloves", Gloves);
 
 Foundry.linkChar("silas", Silas);
 
-Foundry.linkRoom("south", Kitchen);
 
-ProcessingPlant.linkRoom("east", Kitchen);
 
-Graveyard.linkRoom("west", Kitchen);
 
-WorshippingArea.linkRoom("north", Kitchen);
 
 let currentRoom = Kitchen;
 
@@ -221,6 +230,7 @@ let goodEnd = document.createElement("img");
 let goodEndSound = document.querySelector("#goodEnd");
 let badEndSound = document.querySelector("#badEnd");
 let stepsSound = document.querySelector("#steps");
+let basementDrone = document.querySelector("#basementDrone");
 
 window.onload = () => {
     document.getElementById("game").innerHTML = currentRoom.describe();
@@ -240,7 +250,10 @@ window.onload = () => {
                 goodEnding();
 
             } else if (command == "grave" && currentRoom == Graveyard && backpack.includes(" Gloves ")) {
-                badEnding2();
+                basementEvent();
+                playAudio(basementDrone);
+                document.getElementById("command").value = "";
+
             } else if (command == "tanks" && currentRoom == ProcessingPlant) {
                 badEnding3();
             }
@@ -265,8 +278,6 @@ function playAudio(audio) {
     audio.play();
 }
 
-
-
 badEnd.classList.add("imageSpin");
 goodEnd.classList.add("imageSpin");
 
@@ -290,15 +301,15 @@ function badEnding() {
     document.getElementById("information").innerHTML = "(Bad Ending)";
 }
 
-function badEnding2() {
-    playAudio(badEndSound);
-    document.getElementById("game").innerHTML = "You push the gravestone and it slides easily to the side, revealing steps down into the lower levels. As you try to look darkness below, something pushes you down the stairs and you fall hard at the bottom. You hear the sound of the grave being slid back into place."
-    document.getElementById("img-container").appendChild(badEnd);
-    document.getElementById("command").style.display = "none";
-    document.getElementById("inventory-title").style.display = "none";
-    document.getElementById("inventory").style.display = "none";
-    document.getElementById("information").innerHTML = "(Bad Ending)";
+function basementEvent() {
+    document.getElementById("information").innerHTML = "You push the gravestone and it slides easily to the side, revealing steps down into the lower levels. You descend the stairs, and hear the gravestone being slid back in place."
+    currentRoom = Basement;
+    document.getElementById("game").innerHTML = currentRoom.describe();
+    document.querySelector("#map4").style.display = "none";
+
+
 }
+
 
 function badEnding3() {
     playAudio(badEndSound);
@@ -385,7 +396,7 @@ function changeMap() {
         document.getElementById("pre3").style.display = "none";
         document.getElementById("pre4").style.display = "block";
         document.getElementById("pre5").style.display = "none";
-    } else {
+    } else if (currentRoom == ProcessingPlant) {
         document.getElementById("map1").style.display = "none";
         document.getElementById("map2").style.display = "none";
         document.getElementById("map3").style.display = "none";
@@ -397,6 +408,12 @@ function changeMap() {
         document.getElementById("pre3").style.display = "none";
         document.getElementById("pre4").style.display = "none";
         document.getElementById("pre5").style.display = "block";
+    } else {
+        document.getElementById("map1").style.display = "none";
+        document.getElementById("map2").style.display = "none";
+        document.getElementById("map3").style.display = "none";
+        document.getElementById("map4").style.display = "none";
+        document.getElementById("map5").style.display = "none";
     }
 }
 
