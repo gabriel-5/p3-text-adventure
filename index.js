@@ -182,14 +182,15 @@ class Character {
 const Silas = new Character("Silas", "An elderly worker in the foundry.", "I see you took the note... I wouldn't advise going visiting the graveyard with that in your pocket. They won't be happy about it.")
 
 
-const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'Welcome to Skidded Hollow. Please do not remove this note'. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
-const Foundry = new Room("foundry", "The must be where all the heat was coming from. In what looks like a foundry of some sort, there are eight men all all melting down what looks like bronze in a home-made crucible. They don't seem to notice you. The door to the south leads back to the kitchen");
-const ProcessingPlant = new Room("processing plant", "You are in a room full of big tanks processing unidentifiable thick liquids. The place smells like a combination of shoe polish and strong cider. Some of the tanks have small cracks and the liquid is seeping out at a glacial pace. The leaking liquid looks like tree sap. On the floor there is a half-full tube of glue; it looks like someone has unsuccessfully tried to fill the cracks in the tubes using it. The tunnel to the east leads back to the kitchen")
+const Kitchen = new Room("kitchen", "You are in a kitchen. It is spotless and unbearably humid, like a greenhouse in summer. There is an unplugged fridge-freezer with a note on the front which reads 'Welcome to Skid Tiller. Please do not remove this note'. To the north, there is a metal door. To the east, a set of swinging saloon doors. To the south, a red door with a circle carved into it. To the west, a tunnel you may be able to crawl through");
+const Foundry = new Room("foundry", "This must be where all the heat was coming from. In what looks like a foundry of some sort, there are eight men all all melting down bronze in a home-made crucible. They don't seem to notice you. There is a pair of ancient-looking gloves hooked onto the sided of the crucible. The door to the south leads back to the kitchen");
+const ProcessingPlant = new Room("processing plant", "You are in a room full of big tanks processing unidentifiable thick liquids. The place smells like shoe polish. Some of the tanks have small cracks and the liquid is seeping out at a glacial pace. The leaking liquid looks like tree sap. On the floor there is a half-full tube of glue; it looks like someone has unsuccessfully tried to fill the cracks in the tanks using it. The tunnel to the east leads back to the kitchen")
 const Graveyard = new Room("graveyard", "You are in a a spacious, dimly-lit indoor graveyard. There's about three metres of space between each headstone. They all seem to be from wildly differing time periods. To the west is the door back into the kitchen")
 const WorshippingArea = new Room("worshipping area", "The room is nearly completely empty aside from a concrete alter in the far end of the room. On top of the alter there are the remains of a  bronze statue of a dog smashed into pieces. The door to the north leads back to the kitchen")
 
-const Note = new Item("Note", "It is a red piece of paper which reads 'Welcome to Skidded Hollow. Please do not remove this note'");
+const Note = new Item("Note", "It is a red piece of paper which reads 'Welcome to Skid Tiller. Please do not remove this note'");
 const Glue = new Item("Glue", "It is a tube of strong glue");
+const Gloves = new Item("Gloves", "They are a pair of gloves that enhance your physical strength")
 
 
 Kitchen.linkRoom("north", Foundry);
@@ -199,6 +200,7 @@ Kitchen.linkRoom("west", ProcessingPlant);
 
 ProcessingPlant.linkItem("glue", Glue);
 Kitchen.linkItem("note", Note);
+Foundry.linkItem("gloves", Gloves);
 
 Foundry.linkChar("silas", Silas);
 
@@ -214,6 +216,12 @@ let currentRoom = Kitchen;
 
 let backpack = [];
 
+let badEnd = document.createElement("img");
+let goodEnd = document.createElement("img");
+let goodEndSound = document.querySelector("#goodEnd");
+let badEndSound = document.querySelector("#badEnd");
+let stepsSound = document.querySelector("#steps");
+
 window.onload = () => {
     document.getElementById("game").innerHTML = currentRoom.describe();
     changeMap();
@@ -221,35 +229,23 @@ window.onload = () => {
     document.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
             command = document.getElementById("command").value.toLowerCase();
-            //direction commands
             const directions = ["north", "south", "east", "west"]
-            const actions = ["note", "glue"]
+            const actions = ["note", "glue", "gloves"]
 
-            if (directions.includes(command) && currentRoom == Graveyard && backpack.includes(" Note ")) {
-                playAudio(badEndSound);
-                document.getElementById("game").innerHTML = "As you try to leave the graveyard, you begin to hear a harsh ringing in your ears. The ringing feels both internal and external, growing louder and more painful. You feel yourself being dragged away. You lose consciousness."
-                document.getElementById("img-container").appendChild(badEnd);
-                document.getElementById("command").style.display = "none";
-                document.getElementById("inventory-title").style.display = "none";
-                document.getElementById("inventory").style.display = "none";
-                document.getElementById("information").style.display = "none";
+
+            if (command == "west" && currentRoom == Graveyard && backpack.includes(" Note ")) {
+                badEnding();
 
             } else if (command == "dog" && currentRoom == WorshippingArea && backpack.includes(" Glue ")) {
-                document.getElementById("game").innerHTML = "You use the tube of glue to stick the small bronze dog back together. It screams in pain, with the voice of an adult man. The dog stares you down, and says: 'Thank you so much for putting me back together. I've been like that since the last one got sent here. It's going to be okay. I'll send you home.'";
-                document.getElementById("img-container").appendChild(goodEnd);
-                document.getElementById("command").style.display = "none";
-                document.getElementById("inventory-title").style.display = "none";
-                document.getElementById("inventory").style.display = "none";
-                document.getElementById("information").style.display = "none";
+                goodEnding();
 
-            } else if (directions.includes(command)) {
-                currentRoom = currentRoom.move(command);
-                document.getElementById("game").innerHTML = currentRoom.describe();
-                document.getElementById("command").value = "";
-                changeMap();
-                eventTrigger();
-
-
+            } else if (command == "grave" && currentRoom == Graveyard && backpack.includes(" Gloves ")) {
+                badEnding2();
+            } else if (command == "tanks" && currentRoom == ProcessingPlant) {
+                badEnding3();
+            }
+            else if (directions.includes(command)) {
+                changeRoom();
             } else if (actions.includes(command)) {
                 let item = currentRoom.take(command);
                 backpack.push(" " + item.name + " ");
@@ -269,14 +265,7 @@ function playAudio(audio) {
     audio.play();
 }
 
-function inventoryText() {
-    document.getElementById("inventory").innerHTML = ""
-    for (i = 0; i < backpack.length; i++)
-        document.getElementById("inventory").innerHTML += backpack[i];
-}
 
-let badEnd = document.createElement("img");
-let goodEnd = document.createElement("img");
 
 badEnd.classList.add("imageSpin");
 goodEnd.classList.add("imageSpin");
@@ -284,13 +273,65 @@ goodEnd.classList.add("imageSpin");
 badEnd.src = "images/gravestone.png";
 goodEnd.src = "images/door.png";
 
-let badEndSound = document.querySelector("#badEnd");
-let stepsSound = document.querySelector("#steps");
+function inventoryText() {
+    document.getElementById("inventory").innerHTML = ""
+    for (i = 0; i < backpack.length; i++)
+        document.getElementById("inventory").innerHTML += backpack[i];
+}
 
 
-function eventTrigger() {
-    if (currentRoom == Foundry && backpack.includes(" Note "))
-        document.getElementById("information").innerHTML = Silas.talk();
+function badEnding() {
+    playAudio(badEndSound);
+    document.getElementById("game").innerHTML = "As you try to leave the graveyard, you begin to hear a harsh ringing in your ears. The ringing feels both internal and external, growing louder and more painful. You feel yourself being dragged away. You lose consciousness."
+    document.getElementById("img-container").appendChild(badEnd);
+    document.getElementById("command").style.display = "none";
+    document.getElementById("inventory-title").style.display = "none";
+    document.getElementById("inventory").style.display = "none";
+    document.getElementById("information").innerHTML = "(Bad Ending)";
+}
+
+function badEnding2() {
+    playAudio(badEndSound);
+    document.getElementById("game").innerHTML = "You push the gravestone and it slides easily to the side, revealing steps down into the lower levels. As you try to look darkness below, something pushes you down the stairs and you fall hard at the bottom. You hear the sound of the grave being slid back into place."
+    document.getElementById("img-container").appendChild(badEnd);
+    document.getElementById("command").style.display = "none";
+    document.getElementById("inventory-title").style.display = "none";
+    document.getElementById("inventory").style.display = "none";
+    document.getElementById("information").innerHTML = "(Bad Ending)";
+}
+
+function badEnding3() {
+    playAudio(badEndSound);
+    document.getElementById("game").innerHTML = "You walk over to take a closer look at the strange tanks. As you do, you trip on rock and fall over, smashing through the glass. The liquid englufs you on the ground and instantly solidifies. It feels comforting in a way, but there is surely no way out from this one. "
+    document.getElementById("img-container").appendChild(badEnd);
+    document.getElementById("command").style.display = "none";
+    document.getElementById("inventory-title").style.display = "none";
+    document.getElementById("inventory").style.display = "none";
+    document.getElementById("information").innerHTML = "(Bad Ending)";
+}
+
+function goodEnding() {
+    playAudio(goodEndSound);
+    document.getElementById("game").innerHTML = "You use the tube of glue to stick the small bronze dog back together. It screams in pain, with the voice of an adult man. The dog stares you down, and says: 'Thank you so much for putting me back together. I've been like that since the last one got sent here. It's going to be okay. I'll send you home.'";
+    document.getElementById("img-container").appendChild(goodEnd);
+    document.getElementById("command").style.display = "none";
+    document.getElementById("inventory-title").style.display = "none";
+    document.getElementById("inventory").style.display = "none";
+    document.getElementById("information").innerHTML = "(Good Ending)";
+}
+
+function changeRoom() {
+    currentRoom = currentRoom.move(command);
+    document.getElementById("game").innerHTML = currentRoom.describe();
+    document.getElementById("command").value = "";
+    changeMap();
+    silasMeeting();
+}
+
+function silasMeeting() {
+    if (currentRoom == Foundry && backpack.includes(" Note ")) {
+        document.getElementById("information").innerHTML = "As you are about to leave, " + Silas.talk();
+    }
 }
 
 
